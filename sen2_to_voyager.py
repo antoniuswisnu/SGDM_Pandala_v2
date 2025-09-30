@@ -10,7 +10,6 @@ from tqdm import tqdm
 from io import BytesIO
 import pyproj
 
-
 class VoyagerMapDownloader:
     def __init__(self):
         self.session = requests.Session()
