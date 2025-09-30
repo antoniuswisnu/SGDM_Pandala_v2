@@ -56,7 +56,7 @@ class BatchUpscaleProcessor:
         except Exception as e:
             return None, f"Error processing {file_path}: {str(e)}"
     
-    def batch_upscale(self, target_size=(480, 480), interpolation='bicubic'):
+    def batch_upscale(self, target_size=(800, 800), interpolation='bicubic'):
         """
         Batch upscale images
         """
@@ -192,7 +192,7 @@ class BatchUpscaleProcessor:
         df.to_csv(csv_path, index=False)
         print(f"\nDetailed results saved to: {csv_path}")
 
-def process_batch(input_folder, output_folder=None, target_size=(480, 480), interpolation='bicubic'):
+def process_batch(input_folder, output_folder=None, target_size=(800, 800), interpolation='bicubic'):
     """
     Main function to process a batch of images
     """
@@ -219,8 +219,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Batch upscale PNG images')
     parser.add_argument('--input_folder', type=str, required=True, help='Input folder containing PNG images')
     parser.add_argument('--output_folder', type=str, help='Output folder for upscaled images')
-    parser.add_argument('--target_width', type=int, default=480, help='Target width for upscaled images')
-    parser.add_argument('--target_height', type=int, default=480, help='Target height for upscaled images')
+    parser.add_argument('--target_width', type=int, default=800, help='Target width for upscaled images')
+    parser.add_argument('--target_height', type=int, default=800, help='Target height for upscaled images')
     parser.add_argument('--interpolation', type=str, default='bicubic', 
                         choices=['bicubic', 'bilinear', 'nearest', 'lanczos'],
                         help='Interpolation method for upscaling')

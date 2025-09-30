@@ -1,7 +1,7 @@
 dataset:
   target: dataset.LRHRRef.LRHRRefDataset
   params:
-    dataroot: SGDM/dataset/MBD
+    dataroot: SGDM_Pandala_v2/dataset/MBD
 
     l_resolution: 16
     r_resolution: 256

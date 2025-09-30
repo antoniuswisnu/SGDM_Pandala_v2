@@ -2,6 +2,7 @@
 import json
 import os
 from typing import Tuple
+from pathlib import Path
 
 import numpy as np
 import rasterio
@@ -10,6 +11,19 @@ from PIL import Image
 from rasterio.crs import CRS
 from rasterio.windows import Window
 
+
+
+def resolve_tile_path(tiles_dir: str, filename: str) -> str:
+    """Locate the PNG tile, falling back to *_samples.png if needed."""
+    base_path = Path(tiles_dir) / filename
+    if base_path.is_file():
+        return str(base_path)
+
+    alt_path = base_path.with_name(base_path.stem + '_samples' + base_path.suffix)
+    if alt_path.is_file():
+        return str(alt_path)
+
+    raise FileNotFoundError(f"Tile not found: {base_path} or {alt_path}")
 
 def read_tile(path: str) -> np.ndarray:
     """Load a PNG tile and return an array shaped (bands, rows, cols)."""
@@ -88,7 +102,7 @@ def main() -> None:
     canvas_width, canvas_height = determine_canvas_size(index)
 
     tile_records = sorted(tile_records, key=lambda r: (r["y_offset"], r["x_offset"]))
-    first_tile_path = os.path.join(tiles_dir, tile_records[0]["png"])
+    first_tile_path = resolve_tile_path(tiles_dir, tile_records[0]["png"])
     first_tile = read_tile(first_tile_path)
     band_count = first_tile.shape[0]
     dtype = first_tile.dtype
@@ -116,7 +130,7 @@ def main() -> None:
 
     with rasterio.open(args.output, "w", **profile) as dst:
         for record in tile_records:
-            tile_path = os.path.join(tiles_dir, record["png"])
+            tile_path = resolve_tile_path(tiles_dir, record["png"])
             tile_array = read_tile(tile_path)
 
             if tile_array.shape[0] != band_count:
